@@ -12,7 +12,7 @@ int dij(int st) {
 	memset(dis, 0x3f, sizeof dis);
 	priority_queue<pii, vector<pii>, greater<pii> > Q;
 	for (int i : adj[st]) {
-		Q.push({1, i});
+		Q.push({1, i});//本题各边都是1，按实际需要修改距离
 		dis[i] = 1;
 		pre[i] = st;
 	}
