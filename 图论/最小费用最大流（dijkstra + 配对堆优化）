@@ -1,0 +1,95 @@
+#include<bits/stdc++.h>
+#include <ext/pb_ds/priority_queue.hpp>
+#define pii pair<int, int>
+#define INF 0x3f3f3f3f
+using namespace std;
+using namespace __gnu_pbds;
+typedef __gnu_pbds::priority_queue<pii, greater<pii>, pairing_heap_tag> Heap;
+const int maxn = 5010;
+const int maxm = 50010;
+int cnt = 0;
+int head[maxn], Next[maxm * 2], ver[maxm * 2], edge[maxm * 2], cost[maxm * 2], tot;
+int d[maxn], incf[maxn], h[maxn], pre[maxn], v[maxn];
+int Ans, Maxflow, n, m, s, t;
+void add(int x, int y, int z, int c) {
+	ver[++tot] =  y, edge[tot] = z, cost[tot] = c;
+	Next[tot] = head[x], head[x] = tot;
+	ver[++tot] = x, edge[tot] = 0, cost[tot] = -c;
+	Next[tot] = head[y], head[y] = tot;
+}
+queue<int> q;
+void spfa() {
+	memset(h, 0x3f, sizeof(h));
+	q.push(s);
+	h[s] = 0;
+	while(q.size()) {
+		int x = q.front();
+		q.pop();
+		v[x] = 0;
+		for (int i = head[x]; i; i = Next[i]) {
+			if(!edge[i]) continue;
+			int y = ver[i];
+			if(h[y] > h[x] + cost[i]) {
+				h[y] = h[x] + cost[i];
+				if(!v[y]) v[y] = 1, q.push(y);
+			}
+		} 
+	}
+}
+bool dijkstra() {
+	memset(d, 0x3f, sizeof(d));
+	Heap pq;
+	Heap::point_iterator id[maxn];
+	d[s] = 0;
+	incf[s] = INF;
+	id[s] = pq.push(make_pair(0, s));
+	while(pq.size()) {
+		pii x = pq.top();
+		pq.pop();
+		id[x.second] = NULL;
+		if(x.first != d[x.second]) continue;
+		for (int i = head[x.second]; i; i = Next[i]) {
+			if(!edge[i]) continue;
+			int y = ver[i], z = cost[i] + h[x.second] - h[y];
+			if(d[y] > d[x.second] + z) {
+				d[y] = d[x.second] + z;
+				incf[y] = min(incf[x.second], edge[i]);
+				pre[y] = i;
+				if(id[y] != 0)
+					pq.modify(id[y], make_pair(d[y], y));
+				else
+					id[y] = pq.push(make_pair(d[y], y));
+			}
+		}
+	}
+	if(d[t] == INF) return 0;
+	return 1;
+}
+void update() {
+	int x = t;
+	while(x != s) {
+		int i = pre[x];
+		edge[i] -= incf[t];
+		edge[i ^ 1] += incf[t];
+		x = ver[i ^ 1];
+	}
+	Maxflow += incf[t];
+	Ans += (h[t] + d[t]) * incf[t];
+}
+void solve() {
+	Maxflow = Ans = 0;
+	spfa();
+	while(dijkstra())
+		update();
+}
+int main() {
+	int x, y, z, c;
+	scanf("%d%d%d%d", &n, &m, &s, &t);
+	tot = 1;
+	for (int i = 1; i <= m; i++) {
+		scanf("%d%d%d%d", &x, &y, &z, &c);
+		add(x, y, z, c);
+	}
+	solve();
+	printf("%d %d\n", Maxflow, Ans);
+}
