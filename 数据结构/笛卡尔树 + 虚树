@@ -1,0 +1,62 @@
+//笛卡尔树 
+void Tree() {
+    for(int i = 1; i <= n; i ++) {
+        pri[i] = rand();
+        while(top && pri[s[top]] > pri[i])
+        ls[i] = s[top], top --;
+        fa[i] = s[top]; fa[ls[i]] = i; 
+        if(fa[i]) rs[fa[i]] = i;
+        s[++ top] = i;
+    }
+}
+//虚树
+
+bool cmp(int a, int b) {
+	return dfn[a] < dfn[b];//按dfs序排序 
+}
+
+void build() {
+	sort(h + 1, h + 1 + m, cmp);
+	st[Top = 1] = 1;
+	for (int i = 1; i <= m; i++) {
+		int tmp = lca(st[Top], h[i]);
+		if(tmp == st[Top]) {
+			st[++Top] = h[i];
+			continue;
+		}
+		while(Top > 1 && dep[st[Top - 1]] >= dep[tmp]) {
+			add(st[Top - 1], st[Top]);
+			Top--;
+		}
+		if(dep[st[Top]] > dep[tmp]) {
+			add(tmp, st[Top]);
+			Top--;
+		}
+		if(tmp != st[Top]) st[++Top] = tmp;
+		if(h[i] != st[Top]) st[++Top] = h[i];
+	}
+	while(Top > 1) {
+		add(st[Top - 1], st[Top]);
+		Top--; 
+	}
+}
+
+inline bool cmp(int a, int b) { return dfn[a] < dfn[b]; }
+
+//dfn数组为dfs序，dep数组为节点深度
+//h数组存储所有的关键点，总共有K个
+//st为栈
+void Vitural_Tree {
+    sort(h + 1, h + K + 1, cmp);
+    st[top = 1] = 1;
+    for(ri i = 1; i <= K; i ++) {
+        int rem = lca(st[top], h[i]);
+        if(rem == st[top]) { st[++ top] = h[i]; continue; }
+        while(top > 1 && dep[st[top - 1]] >= dep[rem])
+        { link(st[top - 1], st[top]); top --; }
+        if(dep[st[top]] > dep[rem]) link(rem, st[top]), top --;
+        if(rem != st[top]) st[++ top] = rem; 
+        if(h[i] != st[top]) st[++ top] = h[i];
+    }
+    while(top > 1) link(st[top - 1], st[top]), top --;
+}
