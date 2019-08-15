@@ -1,0 +1,16 @@
+#include <bits/stdc++.h>
+using namespace std;
+int main() {
+	int T = 10000;
+	while(T--) {
+		system("D:\\编程文件\\HDU多校训练\\2019\\第八场\\1006generator.exe");//data_generator
+		system("D:\\编程文件\\HDU多校训练\\2019\\第八场\\1006.exe");//my_solution_exe
+		system("D:\\编程文件\\HDU多校训练\\2019\\第八场\\1006duipai.exe");//ac_solution_exe
+		if(system("fc D:\\编程文件\\HDU多校训练\\2019\\第八场\\out.txt D:\\编程文件\\HDU多校训练\\2019\\第八场\\out1.txt")) {
+			//my_solution_output, ac_solution_output
+			printf("WA\n");
+			return 0;
+		}
+		printf("AC\n");
+	}
+} 
