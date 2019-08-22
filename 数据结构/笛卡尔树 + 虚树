@@ -1,13 +1,19 @@
 //笛卡尔树 
-void Tree() {
-    for(int i = 1; i <= n; i ++) {
-        pri[i] = rand();
-        while(top && pri[s[top]] > pri[i])
-        ls[i] = s[top], top --;
-        fa[i] = s[top]; fa[ls[i]] = i; 
-        if(fa[i]) rs[fa[i]] = i;
-        s[++ top] = i;
+int build() {
+    int top = 0;
+    for(int i=1;i<=n;i++) ls[i] = rs[i] = vis[i] = 0;
+    for(int i=1;i<=n;i++){
+        int k = top;
+        while(k > 0 && a[stk[k - 1]] < a[i]) --k;
+        if(k) rs[stk[k-1]] = i;
+        if(k<top) ls[i] = stk[k];
+        stk[k++] = i;
+        top = k;
     }
+    for(int i=1;i<=n;i++) vis[ls[i]] = vis[rs[i]] = 1;
+    int ret = 0;
+    for(int i=1;i<=n;i++) if(vis[i] == 0) ret = i;
+    return ret;
 }
 //虚树
 
